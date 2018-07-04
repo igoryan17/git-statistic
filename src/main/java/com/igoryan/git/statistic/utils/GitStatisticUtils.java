@@ -46,8 +46,9 @@ public class GitStatisticUtils {
         .filter(revCommit -> {
           PersonIdent personIdent = revCommit.getAuthorIdent();
           Date date = personIdent.getWhen();
-          Calendar calendar = Calendar.getInstance();
+          Calendar calendar = Calendar.getInstance(personIdent.getTimeZone());
           calendar.setTime(date);
+          SIX_MONTH_AGO.setTimeZone(personIdent.getTimeZone());
           return calendar.after(SIX_MONTH_AGO) && (
               calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
                   || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY);
@@ -58,7 +59,7 @@ public class GitStatisticUtils {
   public static Map<String, Integer> collectAuthors(List<RevCommit> commits) {
     Map<String, Integer> result = new HashMap<>();
     commits.forEach(revCommit -> {
-      String commiterName = revCommit.getCommitterIdent().getName();
+      String commiterName = revCommit.getAuthorIdent().getName();
       result.compute(commiterName, (name, value) -> {
         if (value == null) {
           return 1;
