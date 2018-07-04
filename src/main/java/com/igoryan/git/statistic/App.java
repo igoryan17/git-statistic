@@ -16,7 +16,8 @@ public class App {
 
   @Bean
   public CommandLineRunner commandLineRunner(@Autowired StatisticAggregator statisticAggregator) {
+    System.out.println("Start aggregating statistic");
     return args -> System.out
-        .println(statisticAggregator.aggregate("https://github.com/centic9/jgit-cookbook.git"));
+        .println(statisticAggregator.aggregate(args[0]));
   }
 }
